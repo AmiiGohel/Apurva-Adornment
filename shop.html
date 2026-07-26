@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop — Apurva Adornment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Poppins:wght@300;400;500;600;700&family=Tiro+Devanagari+Sanskrit&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="site-header"></div>
+
+<main id="main">
+<div class="page-hero">
+  <div class="hero-dev">॥ श्रीजी महाराज की जय ॥</div>
+  <h1>Divine Collection</h1>
+  <p>Handcrafted jewellery, mukuts, vastras & shringar sets — filter by deity, category or budget.</p>
+  <div class="crumbs"><a href="index.html">Home</a> / Shop</div>
+</div>
+
+<section>
+  <div class="container">
+    <button class="btn btn-maroon filters-toggle" id="open-filters">⚙ Filters &amp; Categories</button>
+    <div class="shop-layout">
+
+      <!-- filters -->
+      <aside class="filters" id="filters" aria-label="Product filters">
+        <h3>Filters <button class="btn btn-sm btn-outline" id="clear-filters" type="button">Clear</button></h3>
+        <div class="f-group">
+          <b>Category</b>
+          <div id="f-cats"></div>
+        </div>
+        <div class="f-group">
+          <b>Deity</b>
+          <div id="f-deities"></div>
+        </div>
+        <div class="f-group">
+          <b>Price</b>
+          <label class="f-opt"><input type="radio" name="price" value="all" checked> All prices</label>
+          <label class="f-opt"><input type="radio" name="price" value="0-500"> Under ₹500</label>
+          <label class="f-opt"><input type="radio" name="price" value="500-1500"> ₹500 – ₹1,500</label>
+          <label class="f-opt"><input type="radio" name="price" value="1500-3000"> ₹1,500 – ₹3,000</label>
+          <label class="f-opt"><input type="radio" name="price" value="3000-99999"> Above ₹3,000</label>
+        </div>
+        <div class="f-group">
+          <b>Highlights</b>
+          <label class="f-opt"><input type="checkbox" id="f-badged"> Bestsellers &amp; Festival only</label>
+        </div>
+        <button class="btn btn-gold btn-block" id="apply-filters" style="margin-top:.8rem">Apply</button>
+      </aside>
+
+      <!-- results -->
+      <div>
+        <div class="shop-toolbar">
+          <div class="search-box">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b8860b" stroke-width="2.4"><circle cx="10" cy="10" r="7"/><path d="M15.5 15.5 L21 21"/></svg>
+            <input type="search" id="q" placeholder="Search mukut, vastra, mala…" aria-label="Search products">
+          </div>
+          <select class="sort-sel" id="sort" aria-label="Sort products">
+            <option value="pop">Sort: Popularity</option>
+            <option value="plow">Price: Low → High</option>
+            <option value="phigh">Price: High → Low</option>
+            <option value="rating">Rating</option>
+          </select>
+        </div>
+        <p class="result-count" id="count" style="margin-bottom:1rem"></p>
+        <div class="prod-grid" id="grid"></div>
+        <div class="empty" id="none" style="display:none">
+          <div class="big">🪷</div>
+          <p><b>No products match these filters.</b><br>Try clearing a filter or two.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<div id="site-footer"></div>
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script>
+function pageInit(){
+  /* build filter options */
+  document.getElementById("f-cats").innerHTML = Object.entries(CATEGORIES).map(([k,v]) =>
+    `<label class="f-opt"><input type="checkbox" name="cat" value="${k}"> ${v}</label>`).join("");
+  document.getElementById("f-deities").innerHTML = DEITIES.map(d =>
+    `<label class="f-opt"><input type="checkbox" name="deity" value="${d}"> ${d}</label>`).join("");
+
+  /* pre-select from URL (?cat= / ?deity=) */
+  const urlCat = qs.get("cat"), urlDeity = qs.get("deity");
+  if(urlCat){ const el = document.querySelector(`input[name=cat][value="${urlCat}"]`); if(el) el.checked = true; }
+  if(urlDeity){ const el = document.querySelector(`input[name=deity][value="${urlDeity}"]`); if(el) el.checked = true; }
+
+  const grid = document.getElementById("grid"), none = document.getElementById("none"), count = document.getElementById("count");
+
+  function apply(){
+    const cats = $$("input[name=cat]:checked").map(i=>i.value);
+    const deities = $$("input[name=deity]:checked").map(i=>i.value);
+    const price = document.querySelector("input[name=price]:checked").value;
+    const badged = document.getElementById("f-badged").checked;
+    const q = document.getElementById("q").value.trim().toLowerCase();
+    const sort = document.getElementById("sort").value;
+
+    let list = PRODUCTS.filter(p=>{
+      if(cats.length && !cats.includes(p.cat)) return false;
+      if(deities.length && !deities.includes(p.deity)) return false;
+      if(price !== "all"){ const [lo,hi] = price.split("-").map(Number); if(p.price < lo || p.price > hi) return false; }
+      if(badged && !p.badge) return false;
+      if(q && !(p.name+" "+p.deity+" "+CATEGORIES[p.cat]).toLowerCase().includes(q)) return false;
+      return true;
+    });
+
+    if(sort==="plow") list.sort((a,b)=>a.price-b.price);
+    else if(sort==="phigh") list.sort((a,b)=>b.price-a.price);
+    else if(sort==="rating") list.sort((a,b)=>b.rating-a.rating);
+    else list.sort((a,b)=>b.reviews-a.reviews);
+
+    grid.innerHTML = list.map(cardHTML).join("");
+    none.style.display = list.length ? "none" : "block";
+    count.textContent = `Showing ${list.length} of ${PRODUCTS.length} products`;
+    $$("#grid .reveal").forEach(el=>el.classList.add("on"));
+    closeFilters();
+  }
+
+  /* mobile filter sheet */
+  const filters = document.getElementById("filters");
+  function closeFilters(){ if(window.innerWidth<=900) filters.classList.remove("open"); }
+  document.getElementById("open-filters").onclick = ()=> filters.classList.toggle("open");
+  document.getElementById("apply-filters").onclick = apply;
+  document.getElementById("clear-filters").onclick = ()=>{
+    $$("#filters input[type=checkbox]").forEach(i=>i.checked=false);
+    document.querySelector("input[name=price][value=all]").checked = true;
+    apply();
+  };
+  document.getElementById("q").addEventListener("input", apply);
+  document.getElementById("sort").addEventListener("change", apply);
+  $$("#filters input").forEach(i=>i.addEventListener("change", ()=>{ if(window.innerWidth>900) apply(); }));
+
+  apply();
+}
+</script>
+</body>
+</html>

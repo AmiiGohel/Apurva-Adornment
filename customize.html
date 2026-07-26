@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Customization Studio — Apurva Adornment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Poppins:wght@300;400;500;600;700&family=Tiro+Devanagari+Sanskrit&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="site-header"></div>
+
+<main id="main">
+<div class="page-hero">
+  <div class="hero-dev">॥ त्वदीयं वस्तु गोविन्द तुभ्यमेव समर्पये ॥</div>
+  <h1>Customization Studio</h1>
+  <p>Design a one-of-a-kind shringar for your deity — choose swaroop, fabric, stones & embroidery with a live preview.</p>
+  <div class="crumbs"><a href="index.html">Home</a> / Customize</div>
+</div>
+
+<section>
+  <div class="container">
+    <div class="wizard-steps" id="steps">
+      <div class="wstep on" data-step="1"><span class="n">1</span> Deity</div>
+      <div class="wstep" data-step="2"><span class="n">2</span> Product</div>
+      <div class="wstep" data-step="3"><span class="n">3</span> Design</div>
+      <div class="wstep" data-step="4"><span class="n">4</span> Size &amp; Review</div>
+    </div>
+
+    <div class="custom-layout">
+      <div class="form-card" id="wizard-body"></div>
+
+      <aside class="preview-panel">
+        <div class="preview-stage" id="stage"></div>
+        <div class="card" style="margin-top:1rem;text-align:left">
+          <h3 style="color:var(--maroon-800);font-size:1.2rem;margin-bottom:.7rem">✨ Your Design</h3>
+          <div id="summary"></div>
+          <div class="sum-row" style="border-bottom:none;margin-top:.4rem"><span><b>Estimated Price</b></span><b style="color:var(--saffron);font-size:1.25rem" id="est-price">₹1,499</b></div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- AI measurement scanner (functional) -->
+<section class="ai-sec" id="scanner">
+  <div class="container ai-wrap">
+    <div class="reveal">
+      <div class="sec-kicker">Free With Every Custom Order</div>
+      <h2>AI Deity Measurement Scanner</h2>
+      <p>Not sure of the size? Upload a photo of your Murti / Bhagwan and our scanner reads the proportions automatically — height, shoulder width, neck size &amp; crown diameter — then recommends the exact mukut, necklace &amp; vastra sizes and applies them to your custom order.</p>
+      <ul class="ai-feats">
+        <li><span class="dot">1</span><span><b>Upload a photo</b> — plain background & front view work best.</span></li>
+        <li><span class="dot">2</span><span><b>Set the scale</b> — enter the deity's height, <i>or</i> draw a line on any reference object (coin, ruler) for true auto-measurement.</span></li>
+        <li><span class="dot">3</span><span><b>Get exact sizes</b> — tap “Use these sizes” to fill your order instantly.</span></li>
+      </ul>
+      <small style="color:#c9a985;font-size:.72rem">🔒 Runs entirely in your browser — your photo never leaves your device.</small>
+    </div>
+    <div class="chat-card reveal" style="padding:1rem">
+      <div id="scanner-mount"></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<div id="site-footer"></div>
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script src="js/scanner.js"></script>
+<script>
+const design = { deity:"Radha Krishna", product:"Mukut", fabric:"Silk", color:"Maroon & Gold", stone:"Kundan", embroidery:"Zari", size:"12 inch", notes:"" };
+const PRICES = { base:{Mukut:1499,"Vastra":899,"Necklace Set":1199,"Complete Shringar":3999},
+  fabric:{Silk:300,Velvet:250,Brocade:400,Cotton:0}, stone:{Kundan:500,Pearl:350,Zircon:450,"Meena Work":300},
+  embroidery:{Zari:250,Resham:200,Mirror:150,Plain:0} };
+let step = 1;
+
+const COLOR_MAP = { "Maroon & Gold":["#6d1526","#d4a941"], "Saffron & Cream":["#f2811d","#fdf7ec"], "Peacock & Gold":["#0f6d64","#f3d27a"], "Royal Blue":["#1d3f8f","#f3d27a"], "Pink & Silver":["#c2185b","#e8e8f0"] };
+const DEITY_EMS = { "Shree Swaminarayan":"🙏", "Radha Krishna":"🪈", "Bal Gopal":"🧈", "Jagannath Ji":"👁", "Ram Darbar":"🏹", "Devi Maa":"🔱" };
+
+function pageInit(){
+  drawStep();
+  /* mount the working AI measurement scanner */
+  AAScanner.mount(document.getElementById("scanner-mount"), {
+    getDeity: () => design.deity,
+    onApply: (r) => {
+      design.size = r.sizeOption;
+      const extra = `AI Scan → Height ${Math.round(r.heightIn*10)/10}″ · Mukut ${r.mukut} · Necklace ${r.necklace}″ · Vastra ${r.vastra}`;
+      design.notes = design.notes ? design.notes + "\n" + extra : extra;
+      if(step===4) drawStep(); else refresh();
+      toast(`✅ Sizes applied — Vastra ${r.vastra}, Mukut ${r.mukut}`);
+      document.querySelector(".custom-layout").scrollIntoView({behavior:"smooth",block:"start"});
+    }
+  });
+}
+
+function optGrid(key, items, withEm){
+  return `<div class="opt-grid">` + items.map(v=>{
+    const em = withEm ? `<span class="em">${withEm[v]||"✦"}</span>` : "";
+    return `<button class="opt ${design[key]===v?"on":""}" onclick="pick('${key}','${v.replace(/'/g,"\\'")}')">${em}${v}</button>`;
+  }).join("") + `</div>`;
+}
+
+function drawStep(){
+  const body = document.getElementById("wizard-body");
+  $$("#steps .wstep").forEach(w=>{
+    const n=+w.dataset.step;
+    w.classList.toggle("on", n===step);
+    w.classList.toggle("done", n<step);
+    w.querySelector(".n").textContent = n<step ? "✓" : n;
+  });
+
+  if(step===1) body.innerHTML = `
+    <h3 style="color:var(--maroon-800);font-size:1.3rem;margin-bottom:1rem">Choose Your Deity</h3>
+    ${optGrid("deity", DEITIES, DEITY_EMS)}
+    <div style="display:flex;justify-content:flex-end;margin-top:1.4rem"><button class="btn btn-gold" onclick="go(2)">Next: Product →</button></div>`;
+
+  else if(step===2) body.innerHTML = `
+    <h3 style="color:var(--maroon-800);font-size:1.3rem;margin-bottom:1rem">What shall we craft?</h3>
+    ${optGrid("product", ["Mukut","Vastra","Necklace Set","Complete Shringar"], {Mukut:"👑","Vastra":"👘","Necklace Set":"📿","Complete Shringar":"✨"})}
+    <div style="display:flex;justify-content:space-between;margin-top:1.4rem;gap:.6rem;flex-wrap:wrap">
+      <button class="btn btn-outline" onclick="go(1)">← Back</button>
+      <button class="btn btn-gold" onclick="go(3)">Next: Design →</button></div>`;
+
+  else if(step===3) body.innerHTML = `
+    <h3 style="color:var(--maroon-800);font-size:1.3rem;margin-bottom:1rem">Design Your Piece</h3>
+    <b style="font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--maroon-800)">Fabric</b>
+    <div style="margin:.6rem 0 1.2rem">${optGrid("fabric", ["Silk","Velvet","Brocade","Cotton"])}</div>
+    <b style="font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--maroon-800)">Colour Theme</b>
+    <div class="chips" style="margin:.6rem 0 1.2rem">
+      ${Object.keys(COLOR_MAP).map(c=>`<button class="chip ${design.color===c?"on":""}" onclick="pick('color','${c}')">
+        <span class="swatch" style="width:18px;height:18px;box-shadow:none;background:linear-gradient(135deg,${COLOR_MAP[c][0]},${COLOR_MAP[c][1]})"></span>${c}</button>`).join("")}
+    </div>
+    <b style="font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--maroon-800)">Stone Work</b>
+    <div style="margin:.6rem 0 1.2rem">${optGrid("stone", ["Kundan","Pearl","Zircon","Meena Work"])}</div>
+    <b style="font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--maroon-800)">Embroidery</b>
+    <div style="margin:.6rem 0 .4rem">${optGrid("embroidery", ["Zari","Resham","Mirror","Plain"])}</div>
+    <div style="display:flex;justify-content:space-between;margin-top:1.4rem;gap:.6rem;flex-wrap:wrap">
+      <button class="btn btn-outline" onclick="go(2)">← Back</button>
+      <button class="btn btn-gold" onclick="go(4)">Next: Size →</button></div>`;
+
+  else body.innerHTML = `
+    <h3 style="color:var(--maroon-800);font-size:1.3rem;margin-bottom:1rem">Size &amp; Final Review</h3>
+    <div class="field"><label for="c-size">Deity height</label>
+      <select id="c-size" onchange="design.size=this.value;refresh()">
+        ${["4 inch","6 inch","9 inch","12 inch","18 inch","24 inch","Custom (share via WhatsApp)"].map(s=>`<option ${design.size===s?"selected":""}>${s}</option>`).join("")}
+      </select>
+      <small>Tip: use the free AI Measurement Scanner below if unsure.</small></div>
+    <div class="field"><label for="c-notes">Special instructions (optional)</label>
+      <textarea id="c-notes" placeholder="e.g. Match the Hindola festival theme, add peacock feather accent…" oninput="design.notes=this.value">${design.notes||""}</textarea></div>
+    <div class="field"><label for="c-phone">WhatsApp number (for design confirmation)</label>
+      <input id="c-phone" type="tel" inputmode="tel" placeholder="+91 98XXX XXXXX"></div>
+    <div style="display:flex;justify-content:space-between;margin-top:1rem;gap:.6rem;flex-wrap:wrap">
+      <button class="btn btn-outline" onclick="go(3)">← Back</button>
+      <button class="btn btn-gold" onclick="submitDesign()">🪷 Request This Design</button></div>`;
+
+  refresh();
+}
+
+function pick(key,val){ design[key]=val; drawStep(); }
+function go(n){ step=n; drawStep(); document.querySelector(".custom-layout").scrollIntoView({behavior:"smooth",block:"start"}); }
+
+function refresh(){
+  const [c1,c2] = COLOR_MAP[design.color] || COLOR_MAP["Maroon & Gold"];
+  document.getElementById("stage").innerHTML = `
+    <svg viewBox="0 0 200 210" style="max-width:260px">
+      <circle cx="100" cy="95" r="72" fill="none" stroke="${c2}" stroke-width="1" opacity=".4"/>
+      <circle cx="100" cy="95" r="58" fill="none" stroke="${c2}" stroke-width=".7" opacity=".3" stroke-dasharray="4 5"/>
+      <path d="M55 120 L62 68 L80 92 L100 52 L120 92 L138 68 L145 120 Z" fill="${c1}" stroke="${c2}" stroke-width="3"/>
+      <rect x="52" y="120" width="96" height="12" rx="6" fill="${c2}"/>
+      <circle cx="100" cy="52" r="6" fill="${c2}"/>
+      <circle cx="100" cy="100" r="7" fill="${c2}"/>
+      <circle cx="78" cy="112" r="4" fill="${c2}" opacity=".8"/><circle cx="122" cy="112" r="4" fill="${c2}" opacity=".8"/>
+      <text x="100" y="165" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="${c2}">${design.product} · ${design.color}</text>
+      <text x="100" y="184" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="${c2}" opacity=".8">${DEITY_EMS[design.deity]||""} ${design.deity}</text>
+    </svg>`;
+
+  document.getElementById("summary").innerHTML = ["deity","product","fabric","color","stone","embroidery","size"]
+    .map(k=>`<div class="sum-row"><span style="text-transform:capitalize">${k}</span><b>${design[k]}</b></div>`).join("");
+
+  const price = (PRICES.base[design.product]||1499) + (PRICES.fabric[design.fabric]||0) + (PRICES.stone[design.stone]||0) + (PRICES.embroidery[design.embroidery]||0);
+  document.getElementById("est-price").textContent = fmt(price);
+}
+
+function submitDesign(){
+  toast("🪷 Design request sent! Our artisan team will WhatsApp you within 24 hrs (demo)");
+  setTimeout(()=>{ step=1; drawStep(); window.scrollTo({top:0,behavior:"smooth"}); }, 1600);
+}
+</script>
+</body>
+</html>

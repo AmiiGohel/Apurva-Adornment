@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Donate to Temples — Apurva Adornment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Poppins:wght@300;400;500;600;700&family=Tiro+Devanagari+Sanskrit&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="site-header"></div>
+
+<main id="main">
+<div class="page-hero">
+  <div class="hero-dev">॥ दानं परमं धर्मः ॥</div>
+  <h1>Sponsor Seva for a Temple</h1>
+  <p>Gift a vastra, mukut or complete shringar to a temple anywhere in India — we craft it, deliver it, and send you photos with a blessing certificate.</p>
+  <div class="crumbs"><a href="index.html">Home</a> / Donate</div>
+</div>
+
+<!-- how it works -->
+<section style="padding-bottom:2.5rem">
+  <div class="sec-head reveal">
+    <div class="sec-kicker">How It Works</div>
+    <h2>Seva in Three Steps</h2>
+    <div class="divider">✦</div>
+  </div>
+  <div class="container">
+    <div class="seva-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
+      <div class="seva-card reveal" style="text-align:center"><div class="seva-ic" style="margin:0 auto"><span style="font-size:1.3rem">🛕</span></div>
+        <h3>1 · Choose a Temple</h3><p>Pick from our verified temple directory or nominate your own family mandir.</p></div>
+      <div class="seva-card reveal" style="text-align:center"><div class="seva-ic" style="margin:0 auto"><span style="font-size:1.3rem">🎁</span></div>
+        <h3>2 · Pick Your Seva</h3><p>Vastra, mukut, jewellery or a complete festival shringar — any budget is welcome.</p></div>
+      <div class="seva-card reveal" style="text-align:center"><div class="seva-ic" style="margin:0 auto"><span style="font-size:1.3rem">📜</span></div>
+        <h3>3 · Receive Blessings</h3><p>Track delivery, get darshan photos & a personalised blessing certificate.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- temple directory -->
+<section class="plans-bg">
+  <div class="sec-head reveal">
+    <div class="sec-kicker">Temple Directory</div>
+    <h2>Temples Awaiting Seva</h2>
+    <div class="divider">✦</div>
+    <p>Live festival needs from our verified partner temples (dummy data).</p>
+  </div>
+  <div class="container">
+    <div class="grid-3" id="temple-grid"></div>
+  </div>
+</section>
+
+<!-- NRI -->
+<section class="ai-sec" id="nri">
+  <div class="container ai-wrap">
+    <div class="reveal">
+      <div class="sec-kicker">NRI Temple Gifting</div>
+      <h2>Seva From Anywhere in the World</h2>
+      <p>Living in the USA, UK, Canada, Australia, UAE or Singapore? Sponsor shringar for your family temple back home. Pay in your currency, we handle crafting, delivery & confirmation.</p>
+      <ul class="ai-feats">
+        <li><span class="dot">✈</span><span><b>Example:</b> A devotee in New Jersey sponsors Janmashtami Shringar for ISKCON Ahmedabad — delivered & confirmed with photos in 6 days.</span></li>
+        <li><span class="dot">💳</span><span>International payments in USD, GBP, CAD, AUD, AED & SGD.</span></li>
+        <li><span class="dot">📜</span><span>Digital blessing certificate + darshan video after the seva.</span></li>
+      </ul>
+      <a class="btn btn-gold" href="#donate-form">Start NRI Seva →</a>
+    </div>
+    <div class="chat-card reveal">
+      <div class="chat-head"><div class="chat-avatar">📜</div>
+        <div><b>Donation Tracking</b><small>Sample donor view</small></div></div>
+      <div class="chat-body">
+        <div class="sum-row" style="color:#f3e2c8;border-color:rgba(243,210,122,.25)"><span>Order</span><b style="color:var(--gold-light)">Janmashtami Shringar</b></div>
+        <div class="sum-row" style="color:#f3e2c8;border-color:rgba(243,210,122,.25)"><span>Temple</span><b style="color:var(--gold-light)">ISKCON Ahmedabad</b></div>
+        <div class="sum-row" style="color:#f3e2c8;border-color:rgba(243,210,122,.25)"><span>Status</span><b style="color:#7ee2b8">✓ Delivered & Offered</b></div>
+        <div class="sum-row" style="color:#f3e2c8;border-bottom:none"><span>Certificate</span><b style="color:var(--gold-light)">📜 Issued · #BC-2214</b></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- donation form -->
+<section id="donate-form">
+  <div class="sec-head reveal">
+    <div class="sec-kicker">Begin Your Seva</div>
+    <h2>Donation Form</h2>
+    <div class="divider">✦</div>
+  </div>
+  <div class="container" style="max-width:820px">
+    <form class="form-card reveal" id="don-form">
+      <div class="form-row">
+        <div class="field"><label for="d-temple">Select temple *</label>
+          <select id="d-temple" required></select></div>
+        <div class="field"><label for="d-type">Seva type *</label>
+          <select id="d-type" required>
+            <option>Vastra Donation — from ₹899</option>
+            <option>Mukut Donation — from ₹1,499</option>
+            <option>Jewellery Donation — from ₹1,299</option>
+            <option>Complete Shringar Set — from ₹4,999</option>
+            <option>Festival Sponsorship — custom</option>
+          </select></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label for="d-festival">Festival / occasion</label>
+          <select id="d-festival"><option>Janmashtami</option><option>Annakut</option><option>Diwali</option><option>Hindola</option><option>Radhashtami</option><option>Ram Navami</option><option>Navratri</option><option>General seva</option></select></div>
+        <div class="field"><label for="d-amount">Seva amount (₹) *</label><input id="d-amount" type="number" min="199" required placeholder="e.g. 4999"></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label for="d-name">Your name (for the certificate) *</label><input id="d-name" required placeholder="As it should appear on the blessing certificate"></div>
+        <div class="field"><label for="d-contact">Email / WhatsApp *</label><input id="d-contact" required placeholder="For tracking & darshan photos"></div>
+      </div>
+      <div class="field"><label for="d-msg">Sankalp / dedication message (optional)</label>
+        <textarea id="d-msg" placeholder="e.g. In loving memory of our grandmother, for the good health of our family…"></textarea></div>
+      <button class="btn btn-gold btn-block" type="submit">🪔 Sponsor This Seva</button>
+      <p id="d-done" style="display:none;color:var(--teal);font-weight:600;text-align:center;margin-top:1rem">✅ Sankalp received! You'd now be taken to secure payment. (Demo)</p>
+    </form>
+  </div>
+</section>
+
+<!-- donor tracking sample -->
+<section class="plans-bg" style="padding-top:3rem">
+  <div class="sec-head reveal">
+    <div class="sec-kicker">Full Transparency</div>
+    <h2>Track Every Rupee of Seva</h2>
+    <div class="divider">✦</div>
+  </div>
+  <div class="container">
+    <div class="table-wrap reveal">
+      <table class="nice">
+        <thead><tr><th>Item</th><th>Temple</th><th>Festival</th><th>Status</th><th>Certificate</th></tr></thead>
+        <tbody id="don-table"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+</main>
+
+<div id="site-footer"></div>
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script>
+function pageInit(){
+  /* temple cards */
+  document.getElementById("temple-grid").innerHTML = TEMPLES.map(t=>{
+    const th = ART_THEMES[t.theme];
+    return `<div class="temple-card reveal">
+      <div class="temple-art" style="background:linear-gradient(160deg,${th.bg1},${th.bg2})">
+        <svg width="90" height="70" viewBox="0 0 90 70">
+          <path d="M10 65 V38 L28 38 L28 30 L45 12 L62 30 L62 38 L80 38 V65 Z" fill="none" stroke="${th.fg}" stroke-width="2.4"/>
+          <path d="M45 12 V4 M41 4 H49" stroke="${th.ac}" stroke-width="2.4"/>
+          <rect x="38" y="48" width="14" height="17" fill="${th.fg}" opacity=".85"/>
+        </svg>
+      </div>
+      <div class="temple-body">
+        <h3>${t.name}</h3>
+        <span class="loc">📍 ${t.city}</span>
+        <div class="need">🪔 <b>Current need:</b> ${t.need}</div>
+        <div class="progress"><i style="width:${t.raised}%"></i></div>
+        <small style="color:var(--muted);font-size:.7rem">${t.raised}% of ${t.goal} sponsored</small>
+        <a class="btn btn-gold btn-sm" href="#donate-form" style="margin-top:.8rem" onclick="preselect(${t.id})">Sponsor Seva</a>
+      </div>
+    </div>`;
+  }).join("");
+
+  /* temple select options */
+  document.getElementById("d-temple").innerHTML =
+    TEMPLES.map(t=>`<option value="${t.id}">${t.name} — ${t.city}</option>`).join("") +
+    `<option value="other">Other / my family temple (we'll contact you)</option>`;
+
+  /* donation table */
+  document.getElementById("don-table").innerHTML = DONATIONS.map(d=>`
+    <tr><td>${d.item}</td><td>${d.temple}</td><td>${d.festival}</td>
+      <td><span class="pill ${d.status==="Delivered"?"ok":"info"}">${d.status}</span></td>
+      <td>${d.cert?"📜 Issued":"—"}</td></tr>`).join("");
+
+  document.getElementById("don-form").addEventListener("submit", e=>{
+    e.preventDefault();
+    document.getElementById("d-done").style.display="block";
+    toast("🪔 Seva sankalp received (demo)");
+  });
+}
+function preselect(id){ document.getElementById("d-temple").value = id; }
+</script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product — Apurva Adornment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Poppins:wght@300;400;500;600;700&family=Tiro+Devanagari+Sanskrit&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="site-header"></div>
+
+<main id="main">
+<section style="padding-top:2.4rem">
+  <div class="container">
+    <p class="result-count" id="crumbs" style="margin-bottom:1.4rem"></p>
+    <div class="pdp" id="pdp"></div>
+
+    <div style="margin-top:3.5rem">
+      <div class="tabs" id="tabs" role="tablist">
+        <button class="tab on" data-tab="t-desc" role="tab">Description</button>
+        <button class="tab" data-tab="t-care" role="tab">Care & Details</button>
+        <button class="tab" data-tab="t-rev" role="tab">Reviews</button>
+      </div>
+      <div id="t-desc" class="card" style="line-height:1.8;font-size:.88rem;color:#6b4c3d"></div>
+      <div id="t-care" class="card" style="display:none;line-height:1.8;font-size:.88rem;color:#6b4c3d">
+        <b style="color:var(--maroon-800)">Care instructions</b><br>
+        • Keep away from water, perfume and sindoor stains.<br>
+        • Store in the provided soft pouch after each seva.<br>
+        • Clean gently with a dry muslin cloth.<br><br>
+        <b style="color:var(--maroon-800)">Craft details</b><br>
+        • Handcrafted by our women artisan collective in Gujarat.<br>
+        • Made-to-order sizes available via the <a href="customize.html" style="color:var(--saffron)">Customization Studio</a>.<br>
+        • Dispatch in 3–5 working days; custom pieces in 7–10 days.
+      </div>
+      <div id="t-rev" style="display:none"></div>
+    </div>
+
+    <div class="sec-head reveal" style="margin-top:4rem">
+      <div class="sec-kicker">You May Also Like</div>
+      <h2>Related Adornments</h2>
+      <div class="divider">✦</div>
+    </div>
+    <div class="prod-grid" id="related"></div>
+  </div>
+</section>
+</main>
+
+<div id="site-footer"></div>
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script>
+function pageInit(){
+  const id = +qs.get("id") || 1;
+  const p = PRODUCTS.find(x=>x.id===id) || PRODUCTS[0];
+  document.title = p.name + " — Apurva Adornment";
+  const off = Math.round((1-p.price/p.old)*100);
+  let selSize = p.sizes[0], qty = 1;
+
+  document.getElementById("crumbs").innerHTML =
+    `<a href="index.html" style="color:var(--saffron)">Home</a> / <a href="shop.html?cat=${p.cat}" style="color:var(--saffron)">${CATEGORIES[p.cat]}</a> / ${p.name}`;
+
+  /* thumbnails = same art with theme variations */
+  const variants = [p.theme, (p.theme+2)%6, (p.theme+4)%6];
+  document.getElementById("pdp").innerHTML = `
+    <div class="pdp-gallery">
+      <div class="pdp-main" id="main-art">${productArt(p,"main")}</div>
+      <div class="pdp-thumbs">
+        ${variants.map((t,i)=>`<button class="pdp-thumb ${i===0?"on":""}" data-t="${t}" aria-label="View ${i+1}">${productArt({...p,theme:t},"th"+i)}</button>`).join("")}
+      </div>
+    </div>
+    <div class="pdp-info">
+      ${p.badge?`<span class="prod-badge ${p.badge==="New"?"new":p.badge==="Festival"?"fest":""}" style="position:static;display:inline-block;margin-bottom:.7rem">${p.badge}</span>`:""}
+      <span class="prod-deity" style="display:block;margin-bottom:.3rem">${p.deity}</span>
+      <h1>${p.name}</h1>
+      <span class="prod-rating"><span class="stars">${stars(p.rating)}</span> ${p.rating} · ${p.reviews} reviews</span>
+      <div class="pdp-price"><b>${fmt(p.price)}</b><s>${fmt(p.old)}</s><span class="off">${off}% off</span></div>
+      <p style="font-size:.86rem;color:#6b4c3d;line-height:1.75;font-weight:300">${p.desc}</p>
+
+      <div class="pdp-sec">
+        <b>Select Size</b>
+        <div class="chips" id="sizes">
+          ${p.sizes.map((s,i)=>`<button class="chip ${i===0?"on":""}" data-s="${s}">${s}</button>`).join("")}
+        </div>
+        <small style="display:block;margin-top:.6rem;color:var(--muted);font-size:.72rem">
+          Not sure about size? <a href="customize.html" style="color:var(--saffron);font-weight:600">Use the free AI Measurement Assistant →</a>
+        </small>
+      </div>
+
+      <div class="pdp-sec">
+        <b>Quantity</b>
+        <div class="qty">
+          <button id="q-minus" aria-label="Decrease">−</button><span id="q-val">1</span><button id="q-plus" aria-label="Increase">+</button>
+        </div>
+      </div>
+
+      <div class="pdp-ctas">
+        <button class="btn btn-gold" id="add-btn">🛒 Add to Cart</button>
+        <button class="btn btn-maroon" id="buy-btn">⚡ Buy Now</button>
+      </div>
+
+      <div class="trust-row">
+        <div class="trust"><span>🚚</span>Free shipping over ₹999</div>
+        <div class="trust"><span>🪡</span>Handcrafted by artisans</div>
+        <div class="trust"><span>↩️</span>7-day easy exchange</div>
+      </div>
+
+      <div style="margin-top:1.4rem">
+        <div class="accordion"><button class="acc-head">Delivery & dispatch</button>
+          <div class="acc-body"><div>Ready sizes dispatch in 3–5 working days. Custom-sized pieces take 7–10 days. Worldwide shipping to USA, UK, Canada, Australia, UAE & Singapore.</div></div></div>
+        <div class="accordion"><button class="acc-head">Gift for a temple instead?</button>
+          <div class="acc-body"><div>You can sponsor this item for a temple through our <a href="donate.html" style="color:var(--saffron)">Donation portal</a> — we deliver it, and you receive photos plus a blessing certificate.</div></div></div>
+      </div>
+    </div>`;
+
+  document.getElementById("t-desc").innerHTML =
+    `<b style="color:var(--maroon-800)">${p.name}</b><br><br>${p.desc}<br><br>
+     Every piece is blessed before dispatch and packed in our signature devotional box with a complimentary tulsi leaf and care card.
+     Dimensions are matched to the <b>${p.deity}</b> swaroop; if your deity's size differs, choose custom sizing at checkout or use the AI Measurement Assistant.`;
+
+  /* dummy reviews */
+  const reviews = [
+    ["Priya Patel","Ahmedabad",5,"Absolutely divine quality! The size for my 12-inch Thakorji was perfect. Packaging felt like a gift from the mandir itself. 🙏"],
+    ["Raj Shah","New Jersey, USA",5,"Ordered for Janmashtami from the US — arrived in 6 days with a blessing certificate. My mother was in tears. Highly recommend."],
+    ["Meera Joshi","Vadodara",4,"Beautiful handwork. One stone was slightly loose but support replaced it within a week. Great seva-bhaav from the team."]
+  ];
+  document.getElementById("t-rev").innerHTML = reviews.map(r=>`
+    <div class="card" style="margin-bottom:.8rem">
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:.4rem">
+        <b style="color:var(--maroon-800)">${r[0]}</b>
+        <span class="prod-rating"><span class="stars">${stars(r[2])}</span></span>
+      </div>
+      <small style="color:var(--muted)">${r[1]} · Verified buyer</small>
+      <p style="font-size:.84rem;color:#6b4c3d;margin-top:.5rem;line-height:1.7">${r[3]}</p>
+    </div>`).join("");
+
+  /* interactions */
+  $$("#sizes .chip").forEach(c=>c.onclick=()=>{ $$("#sizes .chip").forEach(x=>x.classList.remove("on")); c.classList.add("on"); selSize=c.dataset.s; });
+  const qv = document.getElementById("q-val");
+  document.getElementById("q-minus").onclick = ()=>{ if(qty>1) qv.textContent = --qty; };
+  document.getElementById("q-plus").onclick = ()=>{ if(qty<10) qv.textContent = ++qty; };
+  document.getElementById("add-btn").onclick = ()=> addToCart(p.id, selSize, qty);
+  document.getElementById("buy-btn").onclick = ()=>{ addToCart(p.id, selSize, qty); location.href="cart.html"; };
+
+  $$(".pdp-thumb").forEach(t=>t.onclick=()=>{
+    $$(".pdp-thumb").forEach(x=>x.classList.remove("on")); t.classList.add("on");
+    document.getElementById("main-art").innerHTML = productArt({...p,theme:+t.dataset.t},"main2");
+  });
+
+  /* tabs */
+  $$("#tabs .tab").forEach(t=>t.onclick=()=>{
+    $$("#tabs .tab").forEach(x=>x.classList.remove("on")); t.classList.add("on");
+    ["t-desc","t-care","t-rev"].forEach(id=>document.getElementById(id).style.display = id===t.dataset.tab?"block":"none");
+  });
+
+  /* related: same deity or category */
+  const rel = PRODUCTS.filter(x=>x.id!==p.id && (x.deity===p.deity || x.cat===p.cat)).slice(0,4);
+  document.getElementById("related").innerHTML = rel.map(cardHTML).join("");
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Temple Services — Apurva Adornment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Poppins:wght@300;400;500;600;700&family=Tiro+Devanagari+Sanskrit&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="site-header"></div>
+
+<main id="main">
+<div class="page-hero">
+  <div class="hero-dev">॥ मंदिर सेवा परमो धर्मः ॥</div>
+  <h1>Temple Seva Platform</h1>
+  <p>Onboard your mandir, manage inventory & festivals, and receive sponsored seva from devotees worldwide.</p>
+  <div class="crumbs"><a href="index.html">Home</a> / Temples</div>
+</div>
+
+<!-- benefits -->
+<section>
+  <div class="sec-head reveal">
+    <div class="sec-kicker">Why Register Your Temple</div>
+    <h2>Everything a Mandir Needs, in One Place</h2>
+    <div class="divider">✦</div>
+  </div>
+  <div class="container">
+    <div class="seva-grid">
+      <div class="seva-card reveal"><span class="num">01</span>
+        <div class="seva-ic"><span style="font-size:1.3rem">📋</span></div>
+        <h3>Order Management</h3><p>Active, previous & repeat orders in one dashboard — reorder last year's Annakut set in one tap.</p></div>
+      <div class="seva-card reveal"><span class="num">02</span>
+        <div class="seva-ic"><span style="font-size:1.3rem">📦</span></div>
+        <h3>Inventory Tracking</h3><p>Track every vastra, mukut & jewellery piece with status: 🟢 Available · 🟡 Repair · 🔴 Replace.</p></div>
+      <div class="seva-card reveal"><span class="num">03</span>
+        <div class="seva-ic"><span style="font-size:1.3rem">🪔</span></div>
+        <h3>Donation Receiving</h3><p>Devotees & NRIs sponsor your festival needs; you confirm receipt and we issue blessing certificates.</p></div>
+      <div class="seva-card reveal"><span class="num">04</span>
+        <div class="seva-ic"><span style="font-size:1.3rem">📅</span></div>
+        <h3>Festival Planner</h3><p>Enter your utsav calendar — the system predicts required shringar and generates purchase lists.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- dashboard preview -->
+<section class="plans-bg" id="planner">
+  <div class="sec-head reveal">
+    <div class="sec-kicker">Sneak Peek</div>
+    <h2>Your Temple Dashboard</h2>
+    <div class="divider">✦</div>
+    <p>A sample of what temple admins see after onboarding (dummy data).</p>
+  </div>
+  <div class="container">
+    <div class="dash-grid reveal">
+      <div class="dash-stat"><b>24</b><span>Active Orders</span></div>
+      <div class="dash-stat"><b>₹1.4L</b><span>Donations This Year</span></div>
+      <div class="dash-stat"><b>132</b><span>Inventory Items</span></div>
+      <div class="dash-stat"><b>5</b><span>Upcoming Festivals</span></div>
+    </div>
+    <div class="grid-2">
+      <div class="reveal">
+        <h3 style="color:var(--maroon-800);font-size:1.25rem;margin-bottom:.8rem">📦 Inventory Snapshot</h3>
+        <div class="table-wrap">
+          <table class="nice">
+            <thead><tr><th>Item</th><th>Category</th><th>Qty</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>Annakut Brocade Vastra</td><td>Vastra</td><td>8</td><td><span class="pill ok">Available</span></td></tr>
+              <tr><td>Rajwadi Mukut (L)</td><td>Mukut</td><td>3</td><td><span class="pill ok">Available</span></td></tr>
+              <tr><td>Kundan Necklace Set</td><td>Jewellery</td><td>5</td><td><span class="pill warn">Repair Needed</span></td></tr>
+              <tr><td>Hindola Decoration Set</td><td>Festival</td><td>1</td><td><span class="pill info">Replacement Due</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="reveal">
+        <h3 style="color:var(--maroon-800);font-size:1.25rem;margin-bottom:.8rem">📅 Festival Forecast — Janmashtami</h3>
+        <div class="card">
+          <div class="sum-row"><span>Vastras required</span><b>10</b></div>
+          <div class="sum-row"><span>Mukuts required</span><b>5</b></div>
+          <div class="sum-row"><span>Jewellery sets</span><b>15</b></div>
+          <div class="sum-row"><span>Currently in stock</span><b>18 items</b></div>
+          <div class="sum-row" style="border-bottom:none"><span><b>Suggested purchase</b></span><b style="color:var(--saffron)">12 items · ≈ ₹38,500</b></div>
+          <button class="btn btn-gold btn-block" style="margin-top:1rem" onclick="toast('🛕 Demo: purchase list would be generated & sent for approval')">Generate Purchase List</button>
+        </div>
+        <h3 style="color:var(--maroon-800);font-size:1.25rem;margin:1.6rem 0 .8rem">🪔 Recent Donations Received</h3>
+        <div class="table-wrap">
+          <table class="nice">
+            <thead><tr><th>Item</th><th>Donor</th><th>Festival</th></tr></thead>
+            <tbody>
+              <tr><td>Mukut</td><td>Raj Patel</td><td>Janmashtami</td></tr>
+              <tr><td>Vastra</td><td>USA Donor</td><td>Annakut</td></tr>
+              <tr><td>Jewellery</td><td>NRI Sponsor</td><td>Diwali</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- registration -->
+<section id="register">
+  <div class="sec-head reveal">
+    <div class="sec-kicker">Free Onboarding</div>
+    <h2>Register Your Temple</h2>
+    <div class="divider">✦</div>
+    <p>Our team verifies details within 2 working days and sets up your dashboard at no cost.</p>
+  </div>
+  <div class="container" style="max-width:820px">
+    <form class="form-card reveal" id="temple-form">
+      <div class="form-row">
+        <div class="field"><label for="t-name">Temple name *</label><input id="t-name" required placeholder="Shree Swaminarayan Mandir"></div>
+        <div class="field"><label for="t-trust">Trust name</label><input id="t-trust" placeholder="Shree NarNarayan Dev Trust"></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label for="t-gst">GST / registration number</label><input id="t-gst" placeholder="24XXXXX0000X1Z5"></div>
+        <div class="field"><label for="t-person">Contact person *</label><input id="t-person" required placeholder="Pujari / trustee name"></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label for="t-phone">Phone / WhatsApp *</label><input id="t-phone" type="tel" inputmode="tel" required placeholder="+91 98XXX XXXXX"></div>
+        <div class="field"><label for="t-city">City & state *</label><input id="t-city" required placeholder="Ahmedabad, Gujarat"></div>
+      </div>
+      <div class="field"><label for="t-address">Full address *</label><textarea id="t-address" required placeholder="Street, area, landmark, PIN code"></textarea></div>
+      <div class="field"><label for="t-deities">Deity details (names & heights)</label><textarea id="t-deities" placeholder="e.g. Shree NarNarayan Dev — 48 inch; Radha Krishna Dev — 36 inch"></textarea></div>
+      <div class="field"><label for="t-photos">Temple & deity photos</label><input id="t-photos" type="file" multiple accept="image/*"><small>Up to 6 photos — used only for size verification.</small></div>
+      <button class="btn btn-gold btn-block" type="submit">🛕 Submit Registration</button>
+      <p id="t-done" style="display:none;color:var(--teal);font-weight:600;text-align:center;margin-top:1rem">✅ Received! Our seva team will call you within 2 working days. (Demo)</p>
+    </form>
+  </div>
+</section>
+</main>
+
+<div id="site-footer"></div>
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script>
+function pageInit(){
+  document.getElementById("temple-form").addEventListener("submit", e=>{
+    e.preventDefault();
+    document.getElementById("t-done").style.display="block";
+    toast("🛕 Registration submitted (demo)");
+    e.target.reset();
+  });
+}
+</script>
+</body>
+</html>

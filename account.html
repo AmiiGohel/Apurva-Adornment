@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Account — Apurva Adornment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Poppins:wght@300;400;500;600;700&family=Tiro+Devanagari+Sanskrit&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="site-header"></div>
+
+<main id="main">
+<div class="page-hero">
+  <h1 id="hero-title">My Account</h1>
+  <p id="hero-sub">Login to manage your orders, deities, donations & seva subscriptions.</p>
+  <div class="crumbs"><a href="index.html">Home</a> / Account</div>
+</div>
+
+<section>
+  <div class="container" id="account-view"></div>
+</section>
+</main>
+
+<div id="site-footer"></div>
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script>
+function pageInit(){
+  if(localStorage.getItem("aa_user")) dashboard(); else loginView();
+}
+
+function loginView(){
+  document.getElementById("account-view").innerHTML = `
+  <div style="max-width:460px;margin:0 auto">
+    <div class="form-card reveal on">
+      <div class="tabs" style="margin-bottom:1.4rem">
+        <button class="tab on" id="tab-login">Login</button>
+        <button class="tab" id="tab-reg">Register</button>
+      </div>
+      <form id="auth-form">
+        <div class="field" id="f-name" style="display:none"><label for="a-name">Full name</label><input id="a-name" placeholder="Your name"></div>
+        <div class="field"><label for="a-phone">Mobile number / email</label><input id="a-phone" required placeholder="+91 98XXX XXXXX"></div>
+        <div class="field"><label for="a-otp">OTP</label><input id="a-otp" inputmode="numeric" required placeholder="Enter 4-digit OTP (demo: 1234)"></div>
+        <button class="btn btn-gold btn-block" type="submit">🙏 Continue</button>
+      </form>
+      <div class="divider" style="margin:1.3rem 0">or</div>
+      <div style="display:grid;gap:.6rem">
+        <button class="btn btn-outline btn-block" onclick="demoLogin('Google')">🔵 Continue with Google</button>
+        <button class="btn btn-outline btn-block" onclick="demoLogin('WhatsApp')">🟢 Continue with WhatsApp</button>
+      </div>
+      <p style="font-size:.68rem;color:var(--muted);text-align:center;margin-top:1rem">Demo site — any details log you into a sample dashboard.</p>
+    </div>
+  </div>`;
+
+  document.getElementById("tab-login").onclick = ()=>authTab(true);
+  document.getElementById("tab-reg").onclick = ()=>authTab(false);
+  document.getElementById("auth-form").addEventListener("submit", e=>{ e.preventDefault(); demoLogin("OTP"); });
+}
+function authTab(isLogin){
+  document.getElementById("tab-login").classList.toggle("on", isLogin);
+  document.getElementById("tab-reg").classList.toggle("on", !isLogin);
+  document.getElementById("f-name").style.display = isLogin ? "none" : "grid";
+}
+function demoLogin(via){
+  localStorage.setItem("aa_user", JSON.stringify({name:"Bhakti Patel", via}));
+  toast(`🙏 Welcome, Bhakti! (demo ${via} login)`);
+  dashboard();
+}
+function logout(){ localStorage.removeItem("aa_user"); toast("Logged out"); loginView();
+  document.getElementById("hero-title").textContent="My Account";
+  document.getElementById("hero-sub").textContent="Login to manage your orders, deities, donations & seva subscriptions.";
+}
+
+function dashboard(){
+  const user = JSON.parse(localStorage.getItem("aa_user"));
+  document.getElementById("hero-title").textContent = `Jay Swaminarayan, ${user.name.split(" ")[0]} 🙏`;
+  document.getElementById("hero-sub").textContent = "Your seva dashboard — orders, deities, donations & subscription.";
+
+  document.getElementById("account-view").innerHTML = `
+  <div class="dash-grid reveal on">
+    <div class="dash-stat"><b>${ORDERS.length}</b><span>Total Orders</span></div>
+    <div class="dash-stat"><b>${MY_DEITIES.length}</b><span>Saved Deities</span></div>
+    <div class="dash-stat"><b>${DONATIONS.length}</b><span>Temple Donations</span></div>
+    <div class="dash-stat"><b>Gold</b><span>Seva Plan Active</span></div>
+  </div>
+
+  <div class="tabs" id="dash-tabs">
+    <button class="tab on" data-t="p-orders">My Orders</button>
+    <button class="tab" data-t="p-deities">My Deities</button>
+    <button class="tab" data-t="p-don">My Donations</button>
+    <button class="tab" data-t="p-sub">Subscription</button>
+  </div>
+
+  <div id="p-orders">
+    <div class="table-wrap">
+      <table class="nice">
+        <thead><tr><th>Order</th><th>Date</th><th>Items</th><th>Total</th><th>Status</th></tr></thead>
+        <tbody>${ORDERS.map(o=>`
+          <tr><td><b>${o.id}</b></td><td>${o.date}</td><td>${o.items}</td><td>${o.total}</td>
+          <td><span class="pill ${o.status==="Delivered"?"ok":o.status==="In Transit"?"info":"warn"}">${o.status}</span></td></tr>`).join("")}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="p-deities" style="display:none">
+    <div class="grid-3">
+      ${MY_DEITIES.map(d=>`
+        <div class="deity-card">
+          <div class="dc-ic">${d.em}</div>
+          <div>
+            <h4>${d.name}</h4>
+            <small>${d.height} · ${d.place}</small><br>
+            <small style="color:var(--gold-deep)">Vastra ${d.vastra} · Mukut ${d.mukut}</small>
+          </div>
+        </div>`).join("")}
+      <button class="deity-card" style="cursor:pointer;border-style:dashed;justify-content:center;color:var(--saffron);font-weight:600;background:none"
+        onclick="toast('➕ Demo: add-deity form would open (name, height, photo for AI sizing)')">＋ Add a Deity</button>
+    </div>
+    <p style="font-size:.78rem;color:var(--muted);margin-top:1rem">💡 Saved measurements auto-fill sizes whenever you shop or customize.</p>
+  </div>
+
+  <div id="p-don" style="display:none">
+    <div class="table-wrap">
+      <table class="nice">
+        <thead><tr><th>Item</th><th>Temple</th><th>Festival</th><th>Status</th><th>Certificate</th></tr></thead>
+        <tbody>${DONATIONS.map(d=>`
+          <tr><td>${d.item}</td><td>${d.temple}</td><td>${d.festival}</td>
+          <td><span class="pill ${d.status==="Delivered"?"ok":"info"}">${d.status}</span></td>
+          <td>${d.cert?`<a href="#" onclick="toast('📜 Demo: certificate PDF would download');return false" style="color:var(--saffron);font-weight:600">📜 Download</a>`:"—"}</td></tr>`).join("")}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="p-sub" style="display:none">
+    <div class="grid-2">
+      <div class="card">
+        <span class="pill ok" style="margin-bottom:.7rem;display:inline-block">Active</span>
+        <h3 style="color:var(--maroon-800);font-size:1.5rem">Gold Seva — ₹7,999/yr</h3>
+        <div class="sum-row"><span>Vastras delivered</span><b>7 of 12</b></div>
+        <div class="sum-row"><span>Next delivery</span><b>02 Aug 2026 (Hindola)</b></div>
+        <div class="sum-row"><span>Festival mukut</span><b>Redeemed — Janmashtami</b></div>
+        <div class="sum-row" style="border-bottom:none"><span>Renews on</span><b>14 Jan 2027</b></div>
+        <div style="display:flex;gap:.6rem;margin-top:1rem;flex-wrap:wrap">
+          <button class="btn btn-gold btn-sm" onclick="toast('⬆️ Demo: upgrade flow to Premium Shringar')">Upgrade to Premium</button>
+          <button class="btn btn-outline btn-sm" onclick="toast('⏸ Demo: pause request submitted')">Pause Plan</button>
+        </div>
+      </div>
+      <div class="card" style="background:linear-gradient(180deg,var(--maroon-800),var(--maroon-950));color:#f0dcc0;border:none">
+        <h3 style="color:var(--gold-light);font-size:1.3rem;margin-bottom:.6rem">📅 Upcoming Festival Reminders</h3>
+        <div class="sum-row" style="color:#f0dcc0;border-color:rgba(243,210,122,.25)"><span>Hindola Utsav</span><b style="color:var(--gold-light)">02 Aug 2026</b></div>
+        <div class="sum-row" style="color:#f0dcc0;border-color:rgba(243,210,122,.25)"><span>Janmashtami</span><b style="color:var(--gold-light)">04 Sep 2026</b></div>
+        <div class="sum-row" style="color:#f0dcc0;border-color:rgba(243,210,122,.25)"><span>Radhashtami</span><b style="color:var(--gold-light)">19 Sep 2026</b></div>
+        <div class="sum-row" style="color:#f0dcc0;border-bottom:none"><span>Annakut</span><b style="color:var(--gold-light)">10 Nov 2026</b></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:right;margin-top:2rem">
+    <button class="btn btn-outline btn-sm" onclick="logout()">Log out</button>
+  </div>`;
+
+  $$("#dash-tabs .tab").forEach(t=>t.onclick=()=>{
+    $$("#dash-tabs .tab").forEach(x=>x.classList.remove("on")); t.classList.add("on");
+    ["p-orders","p-deities","p-don","p-sub"].forEach(id=>document.getElementById(id).style.display = id===t.dataset.t?"block":"none");
+  });
+}
+</script>
+</body>
+</html>
